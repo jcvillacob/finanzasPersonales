@@ -1,7 +1,8 @@
 const Movement = require('../models/movementModel');
 
 exports.getAllMovements = (req, res) => {
-    Movement.find({}, (err, movement) => {
+    const userId = req.userData.userId;
+    Movement.find({ userId: userId }, (err, movement) => {
     if (err) res.status(500).send(err);
     res.status(200).json(movement);
   });
@@ -15,7 +16,9 @@ exports.getMovementById = (req, res) => {
 };
 
 exports.createMovement = (req, res) => {
+
   const newMovement = new Movement(req.body);
+  newMovement.userId = req.userData.userId;
   newMovement.save((err, movement) => {
     if (err) res.status(500).send(err);
     res.status(201).json(movement);
